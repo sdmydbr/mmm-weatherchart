@@ -1,0 +1,29 @@
+{
+    "name":         "mmm-weatherchart",
+    "version":      "1.0.0",
+    "description":  "MagicMirror module to get meteogram from yr.no.",
+    "repository":   {
+                    "type": "git",
+                    "url":  "git+https://github.com/szech/mmm-weatherchart"
+                    },
+    "keywords":     [
+                    "magic mirror",
+                    "smart mirror",
+                    "weather",
+                    "meteogram",
+                    "yr.no",
+                    "module"
+                    ],
+    "author":       "paphko + szech",
+    "contributors": "https://github.com/szech/mmm-weatherchart/graphs/contributors",
+    "license":      "MIT",
+    "bugs":         {
+                    "url": "https://github.com/szech/mmm-weatherchart/issues"
+                    },
+    "homepage":     "https://github.com/szech/mmm-weatherchart#readme",
+    "dependencies": {
+                    "request":  "latest",
+                    "del":      "latest",
+                    "svg-modify": "latest"
+                    }
+}

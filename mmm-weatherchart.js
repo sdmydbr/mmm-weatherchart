@@ -10,12 +10,14 @@ Module.register("mmm-weatherchart", {
 		retryDelay: 2500,
 		domain: "www.yr.no",
 		path: "/place/",
-		mmDirectory: "/home/pi/MagicMirror/" // not sure whether it is possible to ask MM for this path?
+		mmDirectory: "/home/pi/MagicMirror/", // not sure whether it is possible to ask MM for this path?
+		useSVG: false,
+		svgParameters: []
 	},
 
 	// Define required scripts.
 	getScripts: function() {
-		return ["moment.js"];
+		return ["moment.js", "svg-modify", "del"];
 	},
 
 	getDom: function() {
@@ -45,6 +47,19 @@ Module.register("mmm-weatherchart", {
 		this.updateTimer = null;
 	},
 
+   getSVGWeatherMap: function() {
+        var self = this;
+        var mapLocal = this.config.path + this.config.country + "/" + this.config.area + "/" + this.config.city + "/meteogram.svg";
+        var payload = {
+            domain: this.config.domain,
+            path: mapLocal,
+            mmDir: this.config.mmDirectory
+        };
+        self.sendSocketNotification("FETCH_MAP", payload);
+    },
+	
+	
+	
 	getWeatherMap: function() {
 		var self = this;
 		var mapLocal = this.config.path + this.config.country + "/" + this.config.area + "/" + this.config.city + "/meteogram.png";
@@ -75,7 +90,12 @@ Module.register("mmm-weatherchart", {
 		var self = this;
 		clearTimeout(this.updateTimer);
 		this.updateTimer = setTimeout(function() {
-			self.getWeatherMap();
+			if(this.useSVG){
+			    self.getSVGWeatherMap();
+			}
+			else {
+			    self.getWeatherMap();
+			}
 		}, nextLoad);
 	},
 });
