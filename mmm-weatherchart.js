@@ -17,7 +17,7 @@ Module.register("mmm-weatherchart", {
 
 	// Define required scripts.
 	getScripts: function() {
-		return ["moment.js", "svg-modify", "del"];
+		return ["moment.js", "svg-modify.js", "del.js"];
 	},
 
 	getDom: function() {

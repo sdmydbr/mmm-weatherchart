@@ -22,13 +22,14 @@ module.exports = NodeHelper.create({
 				var pngFiles = payload.mmDir + 'modules/mmm-weatherchart/cache/*.png';
 				del([pngFiles]);
 				var cachedFile = new Date().getTime() + '.png';
-				var newImage = fs.createWriteStream(payload.mmDir + 'modules/mmm-weatherchart/cache/map-' + cachedFile);
+				var newImage = fs.createWriteStream(payload.mmDir + 'modules/mmm-weatherchart/cache/' + cachedFile);
+				var meteogram = '/modules/mmm-weatherchart/cache/' + cachedFile;
 				response.on('data', function(chunk){
 					newImage.write(chunk);
 				});
 				response.on('end', function(){
 					newImage.end();
-					self.sendSocketNotification("MAPPED", cachedFile);
+					self.sendSocketNotification("MAPPED", meteogram);
 				});
 			});
 		}
