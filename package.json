@@ -24,6 +24,6 @@
     "dependencies": {
                     "request":  "latest",
                     "del":      "latest",
-                    "svg-modify": "latest"
+                    "hashmap":  "latest"
                     }
 }
