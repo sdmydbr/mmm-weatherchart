@@ -24,6 +24,7 @@
     "dependencies": {
                     "request":  "latest",
                     "del":      "latest",
-                    "hashmap":  "latest"
+                    "hashmap":  "latest",
+                    "fast-xml-parser":  "latest"
                     }
 }

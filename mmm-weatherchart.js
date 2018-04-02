@@ -14,14 +14,15 @@ Module.register("mmm-weatherchart", {
 		useSVG: true,
         customiseSVG: true,    // change colours in hex values or "default" for no change
         background_colour:    "#000000",
-        title_text_colour : "#f2f2f2",    // "Meteogram for...."
+        title_text_colour : "#d9d9d9",    // "Meteogram for...."
         date_text_colour : "#f2f2f2",     // "Tuesday"
         temperature_text_colour: "#f2f2f2", // vertical axis
         rain_text_colour: "#f2f2f2",        // amount of rain 
         below_zero_line_colour: "#74c4fe", 
         above_zero_line_colour: "#ffdb48",    
-        gridline_colour: "#5c5c5c",
-        wind_direction_colour: "#ebebeb",
+        minor_gridline_colour: "#43443c",
+        major_gridline_colour: "#9d9f93",
+        wind_direction_colour: "#9d9f93",
         rain_colour: "#83d2fe",
         snow_colour: "#ffffff",   
         moon_colour_a: "#afb3b6", 
@@ -91,6 +92,10 @@ Module.register("mmm-weatherchart", {
 			}
 			this.scheduleUpdate();
 		}
+		else if (notification === "FAILED"){
+		    this.scheduleUpdate(retryDelay);
+		}
+		    
 	},
 	
 	
@@ -105,7 +110,8 @@ Module.register("mmm-weatherchart", {
     	    ["Arial;", "Arial; " + "fill: " + this.config.title_text_colour + ";"],
     	    ["#000080", this.config.title_text_colour],
     	    ["#212D2C", this.config.temperature_text_colour],
-    	    ["#EAEBE6", this.config.gridline_colour],
+    	    ["#EAEBE6", this.config.minor_gridline_colour],
+            ["#CFD0CA", this.config.major_gridline_colour],
     	    ["#8B918F", this.config.wind_direction_colour],
     	    ["#505956", this.config.date_text_colour],
     	    ["#F01C1C", this.config.above_zero_line_colour],
@@ -116,7 +122,7 @@ Module.register("mmm-weatherchart", {
     	    ['g id="logo-yr"', 'g id="logo-yr" fill="#231F20" '], // make yr logo visible
     	    ['#686e73', this.config.moon_colour_a],
     	    ['#6a7075', this.config.moon_colour_b],
-    	    
+    	    ['1.3-1>', '1.3-1.7,2.2-2.1,2.4l0,0l0,0L6,12c0.8-0.5,2.9-1.4,2.9-4.4L9,0.4L9,0.4z" /></g></svg>'] // bugfix? for dodgy, unclosed yr logo xml
 	    ];
 	    
 	    return array;

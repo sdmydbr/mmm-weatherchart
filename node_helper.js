@@ -4,6 +4,8 @@ var del = require('del');
 var request = require('request'); 
 var NodeHelper = require("node_helper");
 var HashMap = require("hashmap");
+var fastXmlParser = require('fast-xml-parser');
+
 
 module.exports = NodeHelper.create({
 
@@ -39,7 +41,11 @@ module.exports = NodeHelper.create({
 					    var meteogram = self.readSVG(svgFilepath);
 
                         var customColours = new HashMap(payload.customColours);
-					    self.customiseSVG(meteogram, customColours, svgFilepath);
+					    var success = self.customiseSVG(meteogram, customColours, svgFilepath);
+					    if(success == false){
+					        self.sendSocketNotification("FAILED", false);
+					        return; // bail out
+					    }
 					}
 					
 				    self.sendSocketNotification("MAPPED", imagePath);
@@ -74,6 +80,13 @@ module.exports = NodeHelper.create({
            meteogram = meteogram.replace(reg, value);
        });
        
+       // validate result
+       var result = fastXmlParser.validate(meteogram);
+       if(result !== true){
+           console.log(result.err);
+           return false;
+       }
+
        
        console.log("writing file....");
        fs.writeFile(svgFilepath, meteogram, 'utf-8', function(err) {
@@ -84,7 +97,7 @@ module.exports = NodeHelper.create({
            console.log("The file was saved!");
        }); 
        console.log("<< customiseSVG");
-   
+       return true;
    
    },
 	
