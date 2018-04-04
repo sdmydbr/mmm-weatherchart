@@ -83,7 +83,7 @@ module.exports = NodeHelper.create({
        
       
        try {  // validate result
-           libxmljs.parseXml(meteogram)
+           libxmljs.parseXml(meteogram);
        }
        catch (e){
            console.log(result.err);
