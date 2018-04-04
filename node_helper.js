@@ -43,7 +43,7 @@ module.exports = NodeHelper.create({
                         var customColours = new HashMap(payload.customColours);
 					    var success = self.customiseSVG(meteogram, customColours, svgFilepath);
 					    if(success == false){
-					        console.log("Customise SVG failed, sending FAILED notification :( ");
+					        console.log("Customise SVG failed, sending FAILED notification ");
 					        self.sendSocketNotification("FAILED", false);
 					        return; // bail out
 					    }
