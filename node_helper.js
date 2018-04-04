@@ -4,7 +4,7 @@ var del = require('del');
 var request = require('request'); 
 var NodeHelper = require("node_helper");
 var HashMap = require("hashmap");
-var libxmljs  = require('libxmljs');
+var xmlChecker  = require('xmlChecker');
 
 
 module.exports = NodeHelper.create({
@@ -83,10 +83,10 @@ module.exports = NodeHelper.create({
        
       
        try {  // validate result
-           libxmljs.parseXml(meteogram);
+           xmlChecker.check(meteogram);
        }
        catch (e){
-           console.log(result.err);
+           console.log("XML Parser: " + error.name + " at line =" + error.line + ", column =" + error.column + ": " + error.message);
            return false;
        }
        
