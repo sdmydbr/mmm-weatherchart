@@ -25,7 +25,7 @@
                     "request":  "latest",
                     "del":      "latest",
                     "hashmap":  "latest",
-                    "libxmljs":  "latest",
-                    "node-gyp": "latest"
+                    "node-gyp": "latest",
+                    "libxmljs":  "latest"
                     }
 }
