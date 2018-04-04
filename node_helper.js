@@ -4,7 +4,7 @@ var del = require('del');
 var request = require('request'); 
 var NodeHelper = require("node_helper");
 var HashMap = require("hashmap");
-var xmlChecker  = require('xmlChecker');
+var xmlChecker  = require('xmlchecker');
 
 
 module.exports = NodeHelper.create({

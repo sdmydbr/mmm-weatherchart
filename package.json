@@ -25,6 +25,6 @@
                     "request":  "latest",
                     "del":      "latest",
                     "hashmap":  "latest",
-                    "xmlChecker":  "latest"
+                    "xmlchecker":  "latest"
                     }
 }
