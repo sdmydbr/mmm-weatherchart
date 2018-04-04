@@ -4,7 +4,7 @@ var del = require('del');
 var request = require('request'); 
 var NodeHelper = require("node_helper");
 var HashMap = require("hashmap");
-var fastXmlParser = require('fast-xml-parser');
+var libxmljs  = require('libxmljs');
 
 
 module.exports = NodeHelper.create({
@@ -43,6 +43,7 @@ module.exports = NodeHelper.create({
                         var customColours = new HashMap(payload.customColours);
 					    var success = self.customiseSVG(meteogram, customColours, svgFilepath);
 					    if(success == false){
+					        console.log("Customise SVG failed, sending FAILED notification :( ");
 					        self.sendSocketNotification("FAILED", false);
 					        return; // bail out
 					    }
@@ -80,13 +81,14 @@ module.exports = NodeHelper.create({
            meteogram = meteogram.replace(reg, value);
        });
        
-       // validate result
-       var result = fastXmlParser.validate(meteogram);
-       if(result !== true){
+      
+       try {  // validate result
+           libxmljs.parseXml(meteogram)
+       }
+       catch (e){
            console.log(result.err);
            return false;
        }
-
        
        console.log("writing file....");
        fs.writeFile(svgFilepath, meteogram, 'utf-8', function(err) {
