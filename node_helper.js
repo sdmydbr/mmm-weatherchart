@@ -82,13 +82,13 @@ module.exports = NodeHelper.create({
        });
        
       
-       try {  // validate result
-           xmlChecker.check(meteogram);
-       }
-       catch (error){
-           console.log("XML Parser: " + error.name + " at line =" + error.line + ", column =" + error.column + ": " + error.message);
-           return false;
-       }
+//       try {  // validate result
+//           xmlChecker.check(meteogram);
+//       }
+//       catch (error){
+//           console.log("XML Parser: " + error.name + " at line =" + error.line + ", column =" + error.column + ": " + error.message);
+//           return false;
+//       }
        
        console.log("writing file....");
        fs.writeFile(svgFilepath, meteogram, 'utf-8', function(err) {
