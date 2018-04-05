@@ -85,7 +85,7 @@ module.exports = NodeHelper.create({
        try {  // validate result
            xmlChecker.check(meteogram);
        }
-       catch (e){
+       catch (error){
            console.log("XML Parser: " + error.name + " at line =" + error.line + ", column =" + error.column + ": " + error.message);
            return false;
        }
