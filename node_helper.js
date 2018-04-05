@@ -4,7 +4,7 @@ var del = require('del');
 var request = require('request'); 
 var NodeHelper = require("node_helper");
 var HashMap = require("hashmap");
-var svgi  = require('./');
+var svgi  = require('svgi');
 
 
 module.exports = NodeHelper.create({
