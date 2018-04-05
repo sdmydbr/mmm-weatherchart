@@ -4,7 +4,7 @@ var del = require('del');
 var request = require('request'); 
 var NodeHelper = require("node_helper");
 var HashMap = require("hashmap");
-var xmlChecker  = require('xmlchecker');
+var svgi  = require('./');
 
 
 module.exports = NodeHelper.create({
@@ -82,13 +82,14 @@ module.exports = NodeHelper.create({
        });
        
       
-//       try {  // validate result
-//           xmlChecker.check(meteogram);
-//       }
-//       catch (error){
-//           console.log("XML Parser: " + error.name + " at line =" + error.line + ", column =" + error.column + ": " + error.message);
-//           return false;
-//       }
+       try {  // validate result
+           let svgi = new SVG(meteogram);
+           svgi.report();
+       }
+       catch (error){
+           console.log("XML Parser: " + error.name + " at line =" + error.line + ", column =" + error.column + ": " + error.message);
+           return false;
+       }
        
        console.log("writing file....");
        fs.writeFile(svgFilepath, meteogram, 'utf-8', function(err) {
