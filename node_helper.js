@@ -25,10 +25,10 @@ module.exports = NodeHelper.create({
 			http.get(options, function (response) {
 				var pngFiles = payload.mmDir + 'modules/mmm-weatherchart/cache/*.png';
                 var svgFiles = payload.mmDir + 'modules/mmm-weatherchart/cache/*.svg';
-				del([pngFiles, svgFiles]);
 				var cachedFile = new Date().getTime() + imgType;
 				var newImage = fs.createWriteStream(payload.mmDir + 'modules/mmm-weatherchart/cache/' + cachedFile);
 				var imagePath = '/modules/mmm-weatherchart/cache/' + cachedFile;
+				var imagePathAbs = payload.mmDir + imagePath.substring(1);
 				response.on('data', function(chunk){
 					newImage.write(chunk);
 				});
@@ -37,11 +37,10 @@ module.exports = NodeHelper.create({
 					if(payload.useSVG && payload.customiseSVG){
 				        console.log("imagePath = " + imagePath);
 
-					    var svgFilepath = payload.mmDir + imagePath.substring(1);
-					    var meteogram = self.readSVG(svgFilepath);
+					    var meteogram = self.readSVG(imagePathAbs);
 
                         var customColours = new HashMap(payload.customColours);
-					    var success = self.customiseSVG(meteogram, customColours, svgFilepath);
+					    var success = self.customiseSVG(meteogram, customColours, imagePathAbs);
 					    if(success == false){
 					        console.log("Customise SVG failed, sending FAILED notification ");
 					        self.sendSocketNotification("FAILED", false);
@@ -50,6 +49,7 @@ module.exports = NodeHelper.create({
 					}
 					
 				    self.sendSocketNotification("MAPPED", imagePath);
+				    del([pngFiles, svgFiles, '!'+imagePathAbs]);
 					
 				});
 			});
@@ -81,24 +81,26 @@ module.exports = NodeHelper.create({
            meteogram = meteogram.replace(reg, value);
        });
        
-      
-       try {  // validate result
+       
+       console.log("writing file....");
+       fs.writeFile(svgFilepath, meteogram, 'utf-8', function(err) {
+           if(err) {
+               console.log(err);
+               return false;
+           }
+
+           console.log("The file was saved!");
+       }); 
+       
+       try {  // validate result (wip)
            let svgi = new SVG(meteogram);
            svgi.report();
        }
        catch (error){
            console.log(error);
-           return false;
+           // return false;
        }
-       
-       console.log("writing file....");
-       fs.writeFile(svgFilepath, meteogram, 'utf-8', function(err) {
-           if(err) {
-               return console.log(err);
-           }
 
-           console.log("The file was saved!");
-       }); 
        console.log("<< customiseSVG");
        return true;
    
