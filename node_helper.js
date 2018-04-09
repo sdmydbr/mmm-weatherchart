@@ -16,6 +16,7 @@ module.exports = NodeHelper.create({
 	socketNotificationReceived: function(notification, payload) {
 		console.error("Downloading weather map with signal: " + notification + " From URL: " + payload.domain + payload.path);
         var self = this;
+        var success = false;
 		if (notification === "FETCH_MAP"){
 			var options = {
 				host: payload.domain,
@@ -26,30 +27,36 @@ module.exports = NodeHelper.create({
 				var pngFiles = payload.mmDir + 'modules/mmm-weatherchart/cache/*.png';
                 var svgFiles = payload.mmDir + 'modules/mmm-weatherchart/cache/*.svg';
 				var cachedFile = new Date().getTime() + imgType;
-				var newImage = fs.createWriteStream(payload.mmDir + 'modules/mmm-weatherchart/cache/' + cachedFile);
+//				var newImage = fs.createWriteStream(payload.mmDir + 'modules/mmm-weatherchart/cache/' + cachedFile);
 				var imagePath = '/modules/mmm-weatherchart/cache/' + cachedFile;
 				var imagePathAbs = payload.mmDir + imagePath.substring(1);
+				var incomingData = '';
 				response.on('data', function(chunk){
-					newImage.write(chunk);
+					incomingData += chunk; // this probably won't work for png.
 				});
 				response.on('end', function(){
-					newImage.end();
+//					newImage.end();
 					if(payload.useSVG && payload.customiseSVG){
 				        console.log("imagePath = " + imagePath);
 
-					    var meteogram = self.readSVG(imagePathAbs);
+//					    var meteogram = self.readSVG(imagePathAbs);
 
                         var customColours = new HashMap(payload.customColours);
-					    var success = self.customiseSVG(meteogram, customColours, imagePathAbs);
-					    if(success == false){
-					        console.log("Customise SVG failed, sending FAILED notification ");
-					        self.sendSocketNotification("FAILED", false);
-					        return; // bail out
-					    }
+					    success = self.customiseSVG(incomingData, customColours, imagePathAbs);
+					}
+					else { // just write the image
+					    success = self.writeFile(incomingData, imagePathAbs);
 					}
 					
-				    self.sendSocketNotification("MAPPED", imagePath);
-				    del([pngFiles, svgFiles, '!'+imagePathAbs]);
+					if(success == true){
+					    self.sendSocketNotification("MAPPED", imagePath);
+					    del([pngFiles, svgFiles, '!'+imagePathAbs]);
+					}
+					else{
+					    console.log("Customise SVG failed, sending FAILED notification ");
+                        self.sendSocketNotification("FAILED", false);
+					}
+					
 					
 				});
 			});
@@ -57,6 +64,20 @@ module.exports = NodeHelper.create({
 		
 		
 	},
+	
+	writeFile: function(data, path){
+       console.log("writing file....");
+       fs.writeFile(path, data, 'utf-8', function(err) {
+           if(err) {
+               console.log(err);
+               return false;
+           }
+
+           console.log("The file was saved!");
+       }); 
+       return true;
+	},
+	
 	
 	readSVG: function(svgFilepath){
         var self = this;
@@ -81,16 +102,9 @@ module.exports = NodeHelper.create({
            meteogram = meteogram.replace(reg, value);
        });
        
-       
-       console.log("writing file....");
-       fs.writeFile(svgFilepath, meteogram, 'utf-8', function(err) {
-           if(err) {
-               console.log(err);
-               return false;
-           }
-
-           console.log("The file was saved!");
-       }); 
+       if(!self.writeFile(meteogram, svgFilepath)){
+           return false;
+       }
        
        try {  // validate result (wip)
            let svgi = new SVG(meteogram);
