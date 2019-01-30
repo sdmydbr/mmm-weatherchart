@@ -37,21 +37,18 @@ Module.register("mmm-weatherchart", {
 
 	getDom: function() {
 		var wrapper = document.createElement("div");
-		var img = document.createElement("img");
+
+		var object = document.createElement("object"); // FIX chrome not rendering temperature line when using <img> 
+		object.data = this.srcMap;
+		
 		if (this.config.hideBorder) {
 			wrapper.style.width = "810px";
 			wrapper.style.height = "241px";
 			wrapper.style.overflow = "hidden";
 			wrapper.style.position = "relative";
-			img.style.position = "absolute";
-			img.style.left = "-7px";
-			img.style.top = "-25px";
 		}
-		if (this.config.negativeImage) {
-			img.style["-webkit-filter"] = "invert(100%) grayscale(100%)";
-		}
-		img.src = this.srcMap;
-		wrapper.appendChild(img);
+        wrapper.appendChild(object);
+		
 		return wrapper;
 	},
 
@@ -104,6 +101,8 @@ Module.register("mmm-weatherchart", {
 	// key = colour; value = replacement colour from config
 	createCustomColourArray: function() {
 	    var array = [
+	        ["Meteogram for ", ''],
+	        [", England \\(United Kingdom\\)", ''],
 	        ["fill:black", 'fill:' + this.config.wind_direction_colour],
     	    ['#D7EFFA', this.config.background_colour],        // outer background
     	    ['rect x="0" y="0" fill="white"', 'rect x="0" y="0" fill="' + this.config.background_colour + '"'],  // inner background
